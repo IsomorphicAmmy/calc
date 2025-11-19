@@ -188,12 +188,20 @@ int NodeEvaluate(struct Node input_node)
 
 int main(void)
 {
-	char input_buffer[128];
-	fgets(input_buffer, 64, stdin);
-	struct TokenArray token_array = ParseTokens(input_buffer);
-	struct Node node = ParseNode(token_array);
-	int result = NodeEvaluate(node);
-	printf("%d\n", result);
-
+	int quiting = 0;
+	while (!quiting)
+	{
+		char input_buffer[128];
+		fgets(input_buffer, 64, stdin);
+		if (input_buffer[0] == 'q')
+		{
+			quiting = 1;
+			break;
+		}
+		struct TokenArray token_array = ParseTokens(input_buffer);
+		struct Node node = ParseNode(token_array);
+		int result = NodeEvaluate(node);
+		printf("%d\n", result);
+	}
 	return 0;
 }

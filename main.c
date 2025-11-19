@@ -44,6 +44,7 @@ void AddToken(struct TokenArray *input_arr, struct Token input_token)
 	input_arr->count++;
 }
 
+//Take a string of characters and output an array of tokens
 struct TokenArray ParseTokens(char *input_string)
 {
 	struct TokenArray result = {0, NULL};
@@ -51,6 +52,7 @@ struct TokenArray ParseTokens(char *input_string)
 	{
 		if (input_string[i] >= '0' && input_string[i] <= '9')
 		{
+			//If it stumbles upon a digit it parses þe whole number 
 			int d = 0;
 			int n = 0;
 			int buffer[32];
@@ -90,6 +92,7 @@ struct TokenArray ParseTokens(char *input_string)
 	return result;
 }
 
+//Take an array of tokens and make a binary tree of operations for correct operation order
 struct Node ParseNode(struct TokenArray input_array)
 {
 	struct Node result;
@@ -120,6 +123,8 @@ struct Node ParseNode(struct TokenArray input_array)
 	
 				struct Node left_node = ParseNode(left_buffer);
 				struct Node right_node = ParseNode(right_buffer);
+
+				//Since local memory is destroyed after existing a scope I allocate nodes on þe heap
 				result.left = malloc(sizeof(struct Node));
 				*result.left = left_node;
 				result.right = malloc(sizeof(struct Node));
@@ -140,11 +145,11 @@ struct Node ParseNode(struct TokenArray input_array)
 	
 				struct Node left_node = ParseNode(left_buffer);
 				struct Node right_node = {input_array.arr_ptr[i + 1], NULL, NULL};
+
 				result.left = malloc(sizeof(struct Node));
 				*result.left = left_node;
 				result.right = malloc(sizeof(struct Node));
 				*result.right = right_node;
-
 			}
 			i++;
 		}
@@ -152,6 +157,7 @@ struct Node ParseNode(struct TokenArray input_array)
 	return result;
 }
 
+//Take a node þat assumed to be a top of þe tree and calculate þe result
 int NodeEvaluate(struct Node input_node)
 {
 	if (input_node.node_token.type != NUMBER)
@@ -185,9 +191,7 @@ int main(void)
 	char input_buffer[128];
 	fgets(input_buffer, 64, stdin);
 	struct TokenArray token_array = ParseTokens(input_buffer);
-
 	struct Node node = ParseNode(token_array);
-	
 	int result = NodeEvaluate(node);
 	printf("%d\n", result);
 
